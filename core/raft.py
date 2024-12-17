@@ -9,7 +9,7 @@ from corr import CorrBlock, AlternateCorrBlock
 from utils.utils import bilinear_sampler, coords_grid, upflow8
 
 try:
-    autocast = torch.cuda.amp.autocast
+    autocast = lambda enabled: torch.amp.autocast('cuda', enabled=enabled)
 except:
     # dummy autocast for PyTorch < 1.6
     class autocast:
