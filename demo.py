@@ -22,6 +22,9 @@ def load_image(imfile):
     return img[None].to(DEVICE)
 
 def viz(img, flo):
+    import matplotlib.pyplot as plt
+    from IPython.display import display, clear_output
+
     img = img[0].permute(1, 2, 0).cpu().numpy()
     flo = flo[0].permute(1, 2, 0).cpu().numpy()
     
@@ -29,11 +32,16 @@ def viz(img, flo):
     flo = flow_viz.flow_to_image(flo)
     img_flo = np.concatenate([img, flo], axis=0) / 255.0
 
-    # Use matplotlib instead of cv2.imshow for headless environments
+    # Use matplotlib for visualization in Colab
+    plt.figure(figsize=(10, 10))
+    plt.axis("off")
     plt.imshow(img_flo)
-    plt.axis('off')
     plt.show()
 
+    # Ensure the output updates in Colab
+    clear_output(wait=True)
+    display(plt.gcf())
+    
 def demo(args):
     model = torch.nn.DataParallel(RAFT(args))
     model.load_state_dict(torch.load(args.model, weights_only=True, map_location="cpu"))  # Safe loading
