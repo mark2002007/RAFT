@@ -176,7 +176,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     model = torch.nn.DataParallel(RAFT(args))
-    model.load_state_dict(torch.load(args.model))
+    model.load_state_dict(torch.load(args.model, map_location='cpu'))
 
     model.cuda()
     model.eval()
