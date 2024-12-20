@@ -3,7 +3,7 @@ sys.path.append('core')
 
 import argparse
 import os
-import cv2
+import matplotlib.pyplot as plt
 import glob
 import numpy as np
 import torch
@@ -15,7 +15,7 @@ from utils.utils import InputPadder
 
 
 
-DEVICE = 'cuda'
+DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 def load_image(imfile):
     img = np.array(Image.open(imfile)).astype(np.uint8)
@@ -32,16 +32,16 @@ def viz(img, flo):
     img_flo = np.concatenate([img, flo], axis=0)
 
     # import matplotlib.pyplot as plt
-    # plt.imshow(img_flo / 255.0)
-    # plt.show()
+    plt.imshow(img_flo / 255.0)
+    plt.show()
 
-    cv2.imshow('image', img_flo[:, :, [2,1,0]]/255.0)
-    cv2.waitKey()
+    # cv2.imshow('image', img_flo[:, :, [2,1,0]]/255.0)
+    # cv2.waitKey()
 
 
 def demo(args):
     model = torch.nn.DataParallel(RAFT(args))
-    model.load_state_dict(torch.load(args.model))
+    model.load_state_dict(torch.load(args.model, map_location=DEVICE))
 
     model = model.module
     model.to(DEVICE)
