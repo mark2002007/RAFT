@@ -139,7 +139,7 @@ def train(args):
     print("Parameter Count: %d" % count_parameters(model))
 
     if args.restore_ckpt is not None:
-        model.load_state_dict(torch.load(args.restore_ckpt), strict=False)
+        model.load_state_dict(torch.load(args.restore_ckpt, weights_only=True), strict=False)
 
     model.cuda()
     model.train()
